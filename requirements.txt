@@ -11,6 +11,7 @@ bcrypt==4.3.0
 python-multipart==0.0.20
 pillow==11.3.0
 aiofiles==24.1.0
+email-validator==2.2.0
 
 # ML Dependencies
 tensorflow>=2.15.0
