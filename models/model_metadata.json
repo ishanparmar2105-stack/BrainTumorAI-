@@ -1,0 +1,21 @@
+{
+  "model_name": "EfficientNetB0 (Fine-Tuned)",
+  "model_version": "1.0.0",
+  "classes": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "image_size": 224,
+  "preprocessing_steps": "Rescaling to [0, 1]",
+  "training_dataset": "Brain Tumor MRI Dataset (Kaggle)",
+  "training_date": "2026-08-19",
+  "training_samples": 5712,
+  "validation_samples": 1008,
+  "test_samples": 1311,
+  "epochs_trained": 40,
+  "best_val_accuracy": 0.9482,
+  "framework": "TensorFlow/Keras 2.21",
+  "checkpoint_path": "models/best_model.keras"
+}

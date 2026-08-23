@@ -1,0 +1,20 @@
+{
+    "model_name": "pancreatic_cancer_detector",
+    "version": "1.0.0",
+    "input_shape": [
+        224,
+        224,
+        3
+    ],
+    "classes": [
+        "cancer",
+        "no_cancer"
+    ],
+    "metrics": {
+        "accuracy": 0.9412,
+        "precision": 0.9356,
+        "recall": 0.9478,
+        "f1_score": 0.9417,
+        "specificity": 0.9347
+    }
+}

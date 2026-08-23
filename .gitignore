@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+
+# Data & Models
+data/raw/
+data/processed/
+models/*.h5
+models/*.keras
+models/*.pth
+models/*.pt
+!models/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Uploads
+uploads/mri/*
+uploads/gradcam/*
+!uploads/mri/.gitkeep
+!uploads/gradcam/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Docker
+*.log

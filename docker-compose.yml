@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: braintumorai-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=sqlite:///./braintumorai.db
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - MODEL_PATH=../models/best_model.keras
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      target: frontend
+    container_name: braintumorai-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
