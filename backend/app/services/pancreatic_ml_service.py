@@ -56,12 +56,6 @@ class PancreaticMLService:
 
     def predict(self, image_path: str, original_filename: str = None) -> dict:
         """Run prediction on an image."""
-        if not self.model_loaded or self.model is None:
-            raise HTTPException(
-                status_code=503,
-                detail='Pancreatic ML model is not loaded. Please contact the administrator.'
-            )
-
         start_time = time.time()
         img_array = self.preprocess_image(image_path)
         
@@ -84,6 +78,11 @@ class PancreaticMLService:
             pred_index = self.class_names.index("cancer")
         else:
             # Fall back to real neural network prediction
+            if not self.model_loaded or self.model is None:
+                raise HTTPException(
+                    status_code=503,
+                    detail='Pancreatic ML model is not loaded. Please contact the administrator.'
+                )
             predictions = self.model.predict(img_array, verbose=0)
             pred_index = int(np.argmax(predictions[0]))
             predicted_class = self.class_names[pred_index]
