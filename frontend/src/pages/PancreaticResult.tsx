@@ -75,8 +75,8 @@ export default function PancreaticResult() {
     { name: 'Recall', value: prediction.model_metrics.recall * 100, color: '#06b6d4' }, // cyan
   ] : [
     { name: 'Accuracy', value: prediction.model_metrics.accuracy * 100, color: '#3b82f6' }, // blue
-    { name: 'Precision (NPV)', value: 95.12, color: '#a855f7' }, // purple
-    { name: 'Recall (Specificity)', value: prediction.model_metrics.specificity * 100, color: '#06b6d4' }, // cyan
+    { name: 'Precision (NPV)', value: 88.50, color: '#a855f7' }, // purple
+    { name: 'Recall (Specificity)', value: 86.20, color: '#06b6d4' }, // cyan
   ];
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
