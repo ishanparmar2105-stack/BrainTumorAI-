@@ -94,7 +94,7 @@ export default function PancreaticResult() {
       </div>
 
       <div className="glass-card p-8 mb-6 animate-slide-up">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4 flex-1 min-w-0">
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
@@ -107,8 +107,8 @@ export default function PancreaticResult() {
               )}
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white truncate">{label}</h1>
+              <div className="flex flex-wrap items-center gap-3 mb-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white truncate max-w-full">{label}</h1>
                 <span
                   className="px-3 py-1 rounded-full text-xs font-semibold shrink-0"
                   style={{ backgroundColor: `${color}20`, color, border: `1px solid ${color}30` }}
@@ -116,14 +116,15 @@ export default function PancreaticResult() {
                   AI Classification
                 </span>
               </div>
-              <p className="text-slate-400 text-sm truncate">
+              <p className="text-slate-400 text-sm truncate max-w-full">
                 Analysis #{prediction.id} • {prediction.original_filename}
               </p>
             </div>
           </div>
-          <div className="text-right shrink-0 mt-4 sm:mt-0">
-            <div className="flex items-end justify-end gap-1">
-              <span className="text-4xl font-bold" style={{ color }}>{confidence}</span>
+          
+          <div className="flex flex-col items-start sm:items-end shrink-0 w-full sm:w-auto mt-4 sm:mt-0 p-4 sm:p-0 bg-white/5 sm:bg-transparent rounded-xl sm:rounded-none">
+            <div className="flex items-end gap-1">
+              <span className="text-4xl sm:text-5xl font-bold" style={{ color }}>{confidence}</span>
               <span className="text-lg text-slate-400 mb-1">%</span>
             </div>
             <p className="text-sm text-slate-500 font-medium mt-1">Confidence Score</p>
