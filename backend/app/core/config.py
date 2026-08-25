@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = os.path.join(PROJECT_ROOT, 'uploads')
     
     IMAGE_SIZE: int = 224
-    MODEL_VERSION: str = '1.0.6'
+    MODEL_VERSION: str = '1.0.7'
     MAX_FILE_SIZE: int = 10485760
     FRONTEND_URL: str = 'http://localhost:5173'
     CLASS_NAMES: list = ['glioma', 'meningioma', 'notumor', 'pituitary']
