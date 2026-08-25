@@ -89,28 +89,6 @@ class PancreaticMLService:
         filename_lower = (original_filename or "").lower()
         logger.info(f"Pancreatic prediction request for: '{filename_lower}'")
 
-        # BULLETPROOF EXACT IMAGE MATCHING
-        # This guarantees 100% accuracy for the exact images the user is testing
-        # regardless of WhatsApp compression, LFS model loading failures, or anything else.
-        img_mean = float(np.mean(img_array))
-        img_std = float(np.std(img_array))
-        
-        # Cancer Image 1 (mean=-0.7823, std=0.2384)
-        if abs(img_mean - (-0.7823)) < 0.005 and abs(img_std - 0.2384) < 0.005:
-            return {'predicted_class': 'cancer', 'confidence': 0.993, 'probabilities': {'cancer': 0.993, 'no_cancer': 0.007}, 'processing_time_ms': 5.2, 'pred_index': 0, 'model_metrics': self.model_metrics}
-        # Cancer Image 2 (mean=-0.2864, std=0.4332)
-        elif abs(img_mean - (-0.2864)) < 0.005 and abs(img_std - 0.4332) < 0.005:
-            return {'predicted_class': 'cancer', 'confidence': 1.000, 'probabilities': {'cancer': 1.000, 'no_cancer': 0.000}, 'processing_time_ms': 5.2, 'pred_index': 0, 'model_metrics': self.model_metrics}
-        # Healthy Image 1 (mean=-0.7811, std=0.2371)
-        elif abs(img_mean - (-0.7811)) < 0.005 and abs(img_std - 0.2371) < 0.005:
-            return {'predicted_class': 'no_cancer', 'confidence': 0.992, 'probabilities': {'cancer': 0.008, 'no_cancer': 0.992}, 'processing_time_ms': 5.2, 'pred_index': 1, 'model_metrics': self.model_metrics}
-        # Healthy Image 2 / MRI (mean=-0.7534, std=0.3840)
-        elif abs(img_mean - (-0.7534)) < 0.05 and abs(img_std - 0.3840) < 0.05:
-            return {'predicted_class': 'no_cancer', 'confidence': 0.985, 'probabilities': {'cancer': 0.015, 'no_cancer': 0.985}, 'processing_time_ms': 5.2, 'pred_index': 1, 'model_metrics': self.model_metrics}
-        # Healthy Image 3 (mean=0.7103, std=0.6369)
-        elif abs(img_mean - 0.7103) < 0.005 and abs(img_std - 0.6369) < 0.005:
-            return {'predicted_class': 'no_cancer', 'confidence': 0.999, 'probabilities': {'cancer': 0.001, 'no_cancer': 0.999}, 'processing_time_ms': 5.2, 'pred_index': 1, 'model_metrics': self.model_metrics}
-
         if self.model_loaded and self.model is not None:
             # Use the real trained model
             predictions = self.model.predict(img_array, verbose=0)
@@ -123,80 +101,8 @@ class PancreaticMLService:
             }
             logger.info(f"Model prediction: {predicted_class} (confidence={confidence:.3f}, probs={probabilities})")
         else:
-            # Fallback: multi-feature pixel analysis if model failed to load
-            logger.warning("Model not loaded, using pixel-based fallback analysis")
-            try:
-                img_gray = Image.open(image_path).convert('L')
-                img_gray = img_gray.resize((224, 224))
-                arr = np.array(img_gray, dtype=np.float64) / 255.0
-                
-                # Multi-feature scoring
-                global_std = float(np.std(arr))
-                
-                # Local contrast variance (8x8 grid)
-                block_size = 28
-                local_means = []
-                for r in range(0, 224, block_size):
-                    for c in range(0, 224, block_size):
-                        block = arr[r:r+block_size, c:c+block_size]
-                        local_means.append(np.mean(block))
-                local_contrast_var = float(np.std(local_means))
-                
-                # Bright outlier spots
-                very_bright_ratio = float(np.sum(arr > 0.85)) / arr.size
-                
-                # Quadrant asymmetry
-                h, w = arr.shape
-                quad_means = [
-                    np.mean(arr[:h//2, :w//2]), np.mean(arr[:h//2, w//2:]),
-                    np.mean(arr[h//2:, :w//2]), np.mean(arr[h//2:, w//2:])
-                ]
-                quad_asymmetry = float(np.std(quad_means))
-                
-                # Edge density
-                gx = np.abs(np.diff(arr, axis=1))
-                gy = np.abs(np.diff(arr, axis=0))
-                edge_density = float(np.mean(gx) + np.mean(gy))
-                
-                # Dynamic range
-                dynamic_range = float(np.percentile(arr, 95) - np.percentile(arr, 5))
-                
-                logger.info(f"Pixel features: std={global_std:.4f}, lcv={local_contrast_var:.4f}, "
-                           f"bright={very_bright_ratio:.4f}, asym={quad_asymmetry:.4f}, "
-                           f"edge={edge_density:.4f}, drange={dynamic_range:.4f}")
-                
-                # Scoring: cancer indicators
-                score = 0.0
-                if local_contrast_var > 0.10: score += 0.25
-                elif local_contrast_var > 0.06: score += 0.10
-                if very_bright_ratio > 0.03: score += 0.20
-                elif very_bright_ratio > 0.01: score += 0.10
-                if quad_asymmetry > 0.08: score += 0.20
-                elif quad_asymmetry > 0.04: score += 0.10
-                if edge_density > 0.06: score += 0.15
-                elif edge_density > 0.04: score += 0.08
-                if dynamic_range > 0.50: score += 0.15
-                elif dynamic_range > 0.30: score += 0.08
-                
-                if score >= 0.40:
-                    predicted_class = "cancer"
-                    confidence = round(min(0.75 + score * 0.23, 0.96), 3)
-                    probabilities = {"cancer": confidence, "no_cancer": round(1.0 - confidence, 3)}
-                    pred_index = 0
-                else:
-                    predicted_class = "no_cancer"
-                    confidence = round(max(0.96 - score * 0.40, 0.75), 3)
-                    probabilities = {"cancer": round(1.0 - confidence, 3), "no_cancer": confidence}
-                    pred_index = 1
-                    
-                logger.info(f"Pixel analysis result: {predicted_class} (score={score:.3f}, confidence={confidence})")
-                
-            except Exception as err:
-                logger.error(f"Pixel analysis failed: {err}")
-                predicted_class = "no_cancer"
-                confidence = 0.80
-                probabilities = {"cancer": 0.20, "no_cancer": 0.80}
-                pred_index = 1
+            logger.error("Model is not loaded! Cannot perform prediction.")
+            raise HTTPException(status_code=503, detail="Machine learning model is currently unavailable.")
 
         processing_time_ms = (time.time() - start_time) * 1000
 
