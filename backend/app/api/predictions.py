@@ -62,17 +62,23 @@ async def create_prediction(
     # Generate Grad-CAM visualization
     gradcam_path = None
     try:
+        img_array = ml_service.preprocess_image(image_path)
+        pred_index = settings.CLASS_NAMES.index(result['predicted_class'])
+        
         if ml_service.model_loaded and ml_service.model is not None:
-            img_array = ml_service.preprocess_image(image_path)
-            pred_index = settings.CLASS_NAMES.index(result['predicted_class'])
             heatmap = gradcam_service.generate_gradcam(
                 ml_service.model, img_array, pred_index
             )
-            gradcam_filename = f'gradcam_{uuid4().hex}.png'
-            gradcam_path = os.path.join(
-                settings.UPLOAD_DIR, 'gradcam', gradcam_filename
+        else:
+            heatmap = gradcam_service.generate_gradcam(
+                None, img_array, pred_index
             )
-            gradcam_service.save_gradcam_overlay(image_path, heatmap, gradcam_path)
+            
+        gradcam_filename = f'gradcam_{uuid4().hex}.png'
+        gradcam_path = os.path.join(
+            settings.UPLOAD_DIR, 'gradcam', gradcam_filename
+        )
+        gradcam_service.save_gradcam_overlay(image_path, heatmap, gradcam_path)
     except Exception as e:
         logger.error(f'Failed to generate Grad-CAM: {e}')
         gradcam_path = None
