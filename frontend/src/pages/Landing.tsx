@@ -92,15 +92,13 @@ export default function Landing() {
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              <span className="gradient-text">Brain Tumor</span>
+              <span className="gradient-text">Brain Tumor and Pancreatic Cancer</span>
               <br />
               <span className="text-white">Classification AI</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Advanced deep learning system for brain MRI classification using EfficientNet
-              with Grad-CAM explainability. An educational research prototype demonstrating
-              the complete ML product lifecycle.
+              Advanced deep learning system for Brain MRI and Pancreatic Cancer using MobileNetV4.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

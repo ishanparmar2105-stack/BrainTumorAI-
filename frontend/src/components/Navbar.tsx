@@ -46,10 +46,6 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             {isAuthenticated && (
               <>
-                <Link to="/dashboard" className={navLinkClass('/dashboard')}>
-                  <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
-                </Link>
                 <Link to="/analyze" className={navLinkClass('/analyze')}>
                   <Upload className="w-4 h-4" />
                   Brain
@@ -58,16 +54,6 @@ export default function Navbar() {
                   <Activity className="w-4 h-4" />
                   Pancreatic
                 </Link>
-                <Link to="/history" className={navLinkClass('/history')}>
-                  <History className="w-4 h-4" />
-                  History
-                </Link>
-                {isAdmin && (
-                  <Link to="/admin" className={navLinkClass('/admin')}>
-                    <Shield className="w-4 h-4" />
-                    Admin
-                  </Link>
-                )}
               </>
             )}
             <Link to="/about" className={navLinkClass('/about')}>
@@ -111,23 +97,12 @@ export default function Navbar() {
           <div className="px-4 py-4 space-y-1">
             {isAuthenticated && (
               <>
-                <Link to="/dashboard" className={navLinkClass('/dashboard')} onClick={() => setMobileOpen(false)}>
-                  <LayoutDashboard className="w-4 h-4" /> Dashboard
-                </Link>
                 <Link to="/analyze" className={navLinkClass('/analyze')} onClick={() => setMobileOpen(false)}>
                   <Upload className="w-4 h-4" /> Brain
                 </Link>
                 <Link to="/pancreatic/analyze" className={navLinkClass('/pancreatic/analyze')} onClick={() => setMobileOpen(false)}>
                   <Activity className="w-4 h-4" /> Pancreatic
                 </Link>
-                <Link to="/history" className={navLinkClass('/history')} onClick={() => setMobileOpen(false)}>
-                  <History className="w-4 h-4" /> History
-                </Link>
-                {isAdmin && (
-                  <Link to="/admin" className={navLinkClass('/admin')} onClick={() => setMobileOpen(false)}>
-                    <Shield className="w-4 h-4" /> Admin
-                  </Link>
-                )}
               </>
             )}
             <Link to="/about" className={navLinkClass('/about')} onClick={() => setMobileOpen(false)}>
