@@ -12,16 +12,7 @@ from app.core.deps import get_db, get_current_user
 from app.models.pancreatic_prediction import PancreaticPrediction
 from app.models.user import User
 from app.schemas.pancreatic import PancreaticPredictionResponse, PancreaticPredictionListResponse
-from pydantic import BaseModel
-from typing import List
 
-class DebugPrediction(BaseModel):
-    id: int
-    filename: str
-    predicted_class: str
-    confidence: float
-    probs: str
-    created_at: str
 from app.services.pancreatic_ml_service import pancreatic_ml_service
 from app.services.storage_service import storage_service
 
@@ -142,17 +133,3 @@ def get_prediction(
 
     return _build_prediction_response(prediction)
 
-@router.get('/debug/recent', response_model=List[DebugPrediction])
-def get_debug_predictions(db: Session = Depends(get_db)):
-    """Secret endpoint to see recent predictions on production."""
-    predictions = db.query(PancreaticPrediction).order_by(PancreaticPrediction.id.desc()).limit(20).all()
-    return [
-        DebugPrediction(
-            id=p.id,
-            filename=p.original_filename or "",
-            predicted_class=p.predicted_class,
-            confidence=p.confidence,
-            probs=p.probabilities_json,
-            created_at=str(p.created_at)
-        ) for p in predictions
-    ]
