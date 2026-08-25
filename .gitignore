@@ -14,7 +14,6 @@ env/
 data/raw/
 data/processed/
 models/*.h5
-models/*.keras
 models/*.pth
 models/*.pt
 !models/.gitkeep
