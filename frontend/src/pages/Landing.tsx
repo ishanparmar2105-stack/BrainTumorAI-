@@ -85,20 +85,20 @@ export default function Landing() {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
-          <div className="animate-fade-in">
+          <div className="animate-fade-in flex flex-col items-center text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
               <Sparkles className="w-4 h-4 text-blue-400" />
               <span className="text-sm text-slate-300">AI-Powered Medical Research Prototype</span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-center">
               <span className="gradient-text">Brain Tumor and Pancreatic Cancer</span>
               <br />
               <span className="text-white">Classification AI</span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed text-center [text-wrap:balance]">
-              Advanced deep learning system for Brain MRI and Pancreatic Cancer using MobileNetV4.
+            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed text-center w-full">
+              Advanced deep learning system for Brain MRI<br className="hidden sm:block" />and Pancreatic Cancer using MobileNetV4.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
