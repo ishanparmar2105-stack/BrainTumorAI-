@@ -24,6 +24,39 @@ async def lifespan(app: FastAPI):
     create_tables()
     logger.info('Database tables created.')
 
+    # Seed default users if database is empty to survive ephemeral resets
+    from app.models.database import SessionLocal
+    from app.models.user import User
+    from app.core.security import hash_password
+    db = SessionLocal()
+    try:
+        if db.query(User).count() == 0:
+            logger.info('Seeding default users...')
+            db.add(User(
+                email="demo@example.com",
+                username="demouser",
+                hashed_password=hash_password("password123"),
+                role="user"
+            ))
+            db.add(User(
+                email="admin@example.com",
+                username="admin",
+                hashed_password=hash_password("adminpassword"),
+                role="admin"
+            ))
+            db.add(User(
+                email="user@example.com",
+                username="researcher",
+                hashed_password=hash_password("userpassword"),
+                role="user"
+            ))
+            db.commit()
+            logger.info('Default users seeded successfully.')
+    except Exception as e:
+        logger.error(f'Failed to seed default users: {e}')
+    finally:
+        db.close()
+
     ml_service.load_model()
     pancreatic_ml_service.load_model()
 
