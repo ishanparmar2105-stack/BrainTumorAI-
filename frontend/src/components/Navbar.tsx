@@ -6,9 +6,6 @@ import {
   Menu,
   X,
   Upload,
-  History,
-  LayoutDashboard,
-  Shield,
   Info,
   Activity,
 } from 'lucide-react';
