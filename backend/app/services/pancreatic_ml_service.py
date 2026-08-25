@@ -92,17 +92,6 @@ class PancreaticMLService:
         filename_lower = (original_filename or "").lower()
         logger.info(f"Pancreatic prediction request for: '{filename_lower}'")
 
-        # Emergency live-demo bypass for WhatsApp images
-        if "whatsapp" in filename_lower:
-            return {
-                'predicted_class': 'no_cancer',
-                'confidence': 0.985,
-                'probabilities': {'cancer': 0.015, 'no_cancer': 0.985},
-                'processing_time_ms': 5.2,
-                'pred_index': 1,
-                'model_metrics': self.model_metrics
-            }
-
         if self.model_loaded and self.model is not None:
             # Use the real trained model
             predictions = self.model.predict(img_array, verbose=0)
