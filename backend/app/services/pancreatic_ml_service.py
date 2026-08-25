@@ -71,37 +71,8 @@ class PancreaticMLService:
         
         img_array = self.preprocess_image(image_path)
         
-        # Smart bypass: CT models fail on MRI scans. 
-        # Detect the user's specific MRI scan using highly robust statistical pixel matching.
-        # This works even if the image is heavily compressed by WhatsApp (unlike MD5).
-        img_mean = float(np.mean(img_array))
-        img_std = float(np.std(img_array))
-        
-        # The specific user MRI has mean ~ -0.753 and std ~ 0.384. 
-        # We allow a generous +/- 0.05 margin for WhatsApp compression artifacts.
-        if abs(img_mean - (-0.753)) < 0.05 and abs(img_std - 0.384) < 0.05:
-            return {
-                'predicted_class': 'no_cancer',
-                'confidence': 0.985,
-                'probabilities': {'cancer': 0.015, 'no_cancer': 0.985},
-                'processing_time_ms': 5.2,
-                'pred_index': 1,
-                'model_metrics': self.model_metrics
-            }
-        
         filename_lower = (original_filename or "").lower()
         logger.info(f"Pancreatic prediction request for: '{filename_lower}'")
-
-        # Emergency live-demo bypass for WhatsApp images
-        if "whatsapp" in filename_lower:
-            return {
-                'predicted_class': 'no_cancer',
-                'confidence': 0.985,
-                'probabilities': {'cancer': 0.015, 'no_cancer': 0.985},
-                'processing_time_ms': 5.2,
-                'pred_index': 1,
-                'model_metrics': self.model_metrics
-            }
 
         if self.model_loaded and self.model is not None:
             # Use the real trained model
