@@ -85,7 +85,7 @@ export default function PancreaticResult() {
     : `${API_BASE_URL}${prediction.image_url.startsWith('/') ? '' : '/'}${prediction.image_url}`;
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-8 animate-fade-in">
         <Link to="/history" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
@@ -117,13 +117,13 @@ export default function PancreaticResult() {
                   AI Classification
                 </span>
               </div>
-              <p className="text-slate-400 text-sm">Analysis #{prediction.id} • {prediction.original_filename}</p>
+              <p className="text-slate-400 text-sm truncate max-w-[200px] sm:max-w-[400px]">Analysis #{prediction.id} • {prediction.original_filename}</p>
             </div>
           </div>
           <div className="text-right">
             <div className="flex items-end gap-1">
-              <span className="text-5xl font-bold" style={{ color }}>{confidence}</span>
-              <span className="text-xl text-slate-400 mb-1">%</span>
+              <span className="text-4xl font-bold" style={{ color }}>{confidence}</span>
+              <span className="text-lg text-slate-400 mb-1">%</span>
             </div>
             <p className="text-sm text-slate-500 font-medium">Confidence Score</p>
           </div>
