@@ -19,6 +19,7 @@ class PancreaticMLService:
         """Initialize the ML service."""
         self.model = None
         self.model_loaded: bool = False
+        self.load_error: Optional[str] = None
         self.class_names = ['cancer', 'no_cancer']
         self.model_path = os.path.join(PROJECT_ROOT, 'models', 'pancreatic_model.keras')
         
@@ -36,13 +37,16 @@ class PancreaticMLService:
             import tensorflow as tf
             self.model = tf.keras.models.load_model(self.model_path)
             self.model_loaded = True
+            self.load_error = None
             logger.info(f'Model loaded successfully from {self.model_path}')
-        except FileNotFoundError:
+        except FileNotFoundError as e:
+            self.load_error = f"FileNotFoundError: {e}"
             logger.warning(
                 f'Model file not found at {self.model_path}. '
                 'Server will start without Pancreatic ML capabilities.'
             )
         except Exception as e:
+            self.load_error = f"Exception: {e}"
             logger.warning(f'Failed to load model: {e}. Server will start without Pancreatic ML capabilities.')
 
     def preprocess_image(self, image_path: str) -> np.ndarray:

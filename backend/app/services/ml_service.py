@@ -19,6 +19,7 @@ class MLService:
         """Initialize the ML service."""
         self.model = None
         self.model_loaded: bool = False
+        self.load_error: Optional[str] = None
 
     def load_model(self) -> None:
         """Load the TensorFlow/Keras model from disk."""
@@ -26,13 +27,16 @@ class MLService:
             import tensorflow as tf
             self.model = tf.keras.models.load_model(settings.MODEL_PATH)
             self.model_loaded = True
+            self.load_error = None
             logger.info(f'Model loaded successfully from {settings.MODEL_PATH}')
-        except FileNotFoundError:
+        except FileNotFoundError as e:
+            self.load_error = f"FileNotFoundError: {e}"
             logger.warning(
                 f'Model file not found at {settings.MODEL_PATH}. '
                 'Server will start without ML capabilities.'
             )
         except Exception as e:
+            self.load_error = f"Exception: {e}"
             logger.warning(f'Failed to load model: {e}. Server will start without ML capabilities.')
 
     def preprocess_image(self, image_path: str) -> np.ndarray:
