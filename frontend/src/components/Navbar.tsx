@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Brain,
@@ -9,24 +9,14 @@ import {
   History,
   LayoutDashboard,
   Shield,
-  LogOut,
-  LogIn,
-  UserPlus,
   Info,
   Activity,
 } from 'lucide-react';
 
 export default function Navbar() {
-  const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { isAuthenticated, isAdmin, user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-    setMobileOpen(false);
-  };
 
   const isActive = (path: string) => {
     if (path === '/pancreatic/analyze') return location.pathname.startsWith('/pancreatic');
@@ -88,7 +78,7 @@ export default function Navbar() {
 
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-3">
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-[10px] font-bold text-white">
@@ -101,21 +91,6 @@ export default function Navbar() {
                     </span>
                   )}
                 </div>
-                <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-300">
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link to="/login" className="btn-secondary text-sm py-2 px-4">
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </Link>
-                <Link to="/register" className="btn-primary text-sm py-2 px-4">
-                  <UserPlus className="w-4 h-4" />
-                  Sign Up
-                </Link>
               </div>
             )}
           </div>
@@ -158,22 +133,6 @@ export default function Navbar() {
             <Link to="/about" className={navLinkClass('/about')} onClick={() => setMobileOpen(false)}>
               <Info className="w-4 h-4" /> About
             </Link>
-            <div className="pt-3 mt-3 border-t border-white/5">
-              {isAuthenticated ? (
-                <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-rose-400 hover:bg-rose-500/10 transition-all">
-                  <LogOut className="w-4 h-4" /> Logout
-                </button>
-              ) : (
-                <div className="flex gap-2">
-                  <Link to="/login" className="btn-secondary text-sm py-2 px-4 flex-1 justify-center" onClick={() => setMobileOpen(false)}>
-                    Sign In
-                  </Link>
-                  <Link to="/register" className="btn-primary text-sm py-2 px-4 flex-1 justify-center" onClick={() => setMobileOpen(false)}>
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
