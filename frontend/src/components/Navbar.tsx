@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  Brain,
   Menu,
   X,
   Upload,
@@ -34,9 +33,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-all duration-300">
-              <Brain className="w-5 h-5 text-white" />
+              <Activity className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold gradient-text">BrainTumorAI</span>
+            <span className="text-lg font-bold gradient-text">CancerDetectAI</span>
           </Link>
 
           {/* Desktop Nav */}

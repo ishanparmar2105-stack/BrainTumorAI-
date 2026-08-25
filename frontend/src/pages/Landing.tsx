@@ -97,7 +97,7 @@ export default function Landing() {
               <span className="text-white">Classification AI</span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed text-center [text-wrap:balance]">
               Advanced deep learning system for Brain MRI and Pancreatic Cancer using MobileNetV4.
             </p>
 
@@ -115,7 +115,7 @@ export default function Landing() {
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-all shadow-lg shadow-emerald-500/25 text-lg"
               >
                 <Activity className="w-5 h-5" />
-                Analyze Pancreatic CT
+                Analyze Pancreatic MRI
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -162,7 +162,7 @@ export default function Landing() {
                 </h2>
                 
                 <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-                  We've expanded our AI capabilities to include binary classification for pancreatic cancer using CT scans. Upload a scan and get instant detection results with comprehensive model performance metrics.
+                  We've expanded our AI capabilities to include binary classification for pancreatic cancer using MRI scans. Upload a scan and get instant detection results with comprehensive model performance metrics.
                 </p>
                 
                 <ul className="space-y-4 mb-8">
@@ -206,7 +206,7 @@ export default function Landing() {
                       </div>
                       <div>
                         <h4 className="text-white font-medium">Pancreatic Analysis</h4>
-                        <p className="text-xs text-slate-400">CT Scan Evaluation</p>
+                        <p className="text-xs text-slate-400">MRI Scan Evaluation</p>
                       </div>
                     </div>
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
