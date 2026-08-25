@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+// useAuth removed since it's no longer used for landing page logic
 import {
   Brain,
   Upload,
@@ -7,7 +7,6 @@ import {
   Shield,
   Scan,
   History,
-  FileText,
   Zap,
   ArrowRight,
   Sparkles,
@@ -17,7 +16,7 @@ import {
 import MedicalDisclaimer from '../components/MedicalDisclaimer';
 
 export default function Landing() {
-  const { isAuthenticated } = useAuth();
+  // isAuthenticated unused
 
   const features = [
     {
@@ -106,16 +105,20 @@ export default function Landing() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                to={isAuthenticated ? '/analyze' : '/register'}
+                to="/analyze"
                 className="btn-primary text-lg px-8 py-4 rounded-xl shadow-lg shadow-blue-500/25"
               >
-                <Zap className="w-5 h-5" />
-                {isAuthenticated ? 'Start Analysis' : 'Get Started'}
+                <Brain className="w-5 h-5" />
+                Analyze Brain MRI
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link to="/about" className="btn-secondary text-lg px-8 py-4 rounded-xl">
-                <FileText className="w-5 h-5" />
-                Learn More
+              <Link
+                to="/pancreatic/analyze"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-all shadow-lg shadow-emerald-500/25 text-lg"
+              >
+                <Activity className="w-5 h-5" />
+                Analyze Pancreatic CT
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
@@ -186,7 +189,7 @@ export default function Landing() {
                 </ul>
                 
                 <Link
-                  to={isAuthenticated ? "/pancreatic/analyze" : "/register"}
+                  to="/pancreatic/analyze"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium transition-all shadow-lg shadow-emerald-500/25"
                 >
                   <Activity className="w-5 h-5" />
@@ -329,11 +332,11 @@ export default function Landing() {
                 Start exploring brain MRI classification with our AI-powered research platform.
               </p>
               <Link
-                to={isAuthenticated ? '/analyze' : '/register'}
+                to="/analyze"
                 className="btn-primary text-lg px-8 py-4 rounded-xl"
               >
                 <Zap className="w-5 h-5" />
-                {isAuthenticated ? 'Go to Analysis' : 'Create Free Account'}
+                Start Instant Analysis
               </Link>
             </div>
           </div>

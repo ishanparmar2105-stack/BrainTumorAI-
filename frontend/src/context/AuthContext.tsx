@@ -15,48 +15,32 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const DEFAULT_DEMO_USER: User = {
+  id: 1,
+  email: 'demo@example.com',
+  username: 'demouser',
+  role: 'admin',
+  created_at: new Date().toISOString()
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(DEFAULT_DEMO_USER);
   const [token, setToken] = useState<string | null>(localStorage.getItem('braintumorai_token'));
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading] = useState(false);
 
   useEffect(() => {
-    const autoAuthenticate = async () => {
-      if (token) {
-        try {
-          const userData = await authApi.getMe();
-          setUser(userData);
-          setIsLoading(false);
-          return;
-        } catch {
-          localStorage.removeItem('braintumorai_token');
-          setToken(null);
-        }
-      }
-
-      // Automatically login with demo credentials silently in the background
+    const fetchTokenInBackground = async () => {
+      if (token) return;
       try {
         const response = await authApi.login({ email: 'demo@example.com', password: 'password123' });
         localStorage.setItem('braintumorai_token', response.access_token);
         setToken(response.access_token);
-        const userData = await authApi.getMe();
-        setUser(userData);
       } catch (err) {
-        console.error('Silent auto-login failed:', err);
-        // Fallback session to prevent app from breaking if backend is restarting
-        setUser({
-          id: 1,
-          email: 'demo@example.com',
-          username: 'demouser',
-          role: 'user',
-          created_at: new Date().toISOString()
-        });
-      } finally {
-        setIsLoading(false);
+        // Silent fallback
       }
     };
 
-    autoAuthenticate();
+    fetchTokenInBackground();
   }, [token]);
 
   const login = async (email: string, password: string) => {

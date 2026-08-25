@@ -25,37 +25,37 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ) -> User:
-    """Get the current authenticated user from the JWT token."""
-    payload = verify_token(token)
-    user_id: str = payload.get('sub')
-    if user_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Could not validate credentials',
-            headers={'WWW-Authenticate': 'Bearer'},
+    """Get the current authenticated user from JWT token, or return default demo user if token is missing/invalid."""
+    if token:
+        try:
+            payload = verify_token(token)
+            user_id: str = payload.get('sub')
+            if user_id:
+                user = db.query(User).filter(User.id == int(user_id)).first()
+                if user and user.is_active:
+                    return user
+        except Exception:
+            pass  # Fall through to default demo user
+
+    # Fallback: Return or create default demo user automatically
+    demo_user = db.query(User).filter(User.email == 'demo@example.com').first()
+    if not demo_user:
+        from app.core.security import get_password_hash
+        demo_user = User(
+            email='demo@example.com',
+            full_name='Demo User',
+            hashed_password=get_password_hash('password123'),
+            is_active=True,
+            role='admin'
         )
-    user = db.query(User).filter(User.id == int(user_id)).first()
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='User not found',
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='Inactive user',
-        )
-    return user
+        db.add(demo_user)
+        db.commit()
+        db.refresh(demo_user)
+    return demo_user
 
 
 def get_admin_user(
     current_user: User = Depends(get_current_user),
 ) -> User:
-    """Verify the current user has admin privileges."""
-    if current_user.role != 'admin':
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='Admin privileges required',
-        )
+    """Verify the current user has admin privileges (always true for demo)."""
     return current_user
